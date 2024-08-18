@@ -1,6 +1,7 @@
 package controller;
 
 import com.jfoenix.controls.JFXTextField;
+import db.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +15,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import model.Customer;
 
 import java.net.URL;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +68,7 @@ public class AddCustomerFormController implements Initializable {
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         colSalary.setCellValueFactory(new PropertyValueFactory<>("salary"));
-        colDob.setCellValueFactory(new PropertyValueFactory<>("dob"));
+        //colDob.setCellValueFactory(new PropertyValueFactory<>("dob"));
 
         ObservableList<String> titleList = FXCollections.observableArrayList();
         titleList.add("MR.");
@@ -74,6 +76,7 @@ public class AddCustomerFormController implements Initializable {
         titleList.add("MRS.");
         cmbTitle.setItems(titleList);
     }
+
     @FXML
     void btnAddOnAction(ActionEvent event) {
         customerList.add(
@@ -81,21 +84,46 @@ public class AddCustomerFormController implements Initializable {
                         txtId.getText(),
                         cmbTitle.getValue() + txtName.getText(),
                         txtAddress.getText(),
-                        Double.parseDouble(txtSalary.getText()),
-                        dateDob.getValue())
-        );
+                        Double.parseDouble(txtSalary.getText())
+        ));
+
+
 
     }
 
     @FXML
     void btnReloadOnAction(ActionEvent event) {
+
         ObservableList<Customer> customerObservableList = FXCollections.observableArrayList();
 
-        customerList.forEach(customer->{
+        try {
+            Connection connection = DBConnection.getInstance().getConnection();
+
+            PreparedStatement psTm = connection.prepareStatement("SELECT * FROM customer");
+            ResultSet resultSet = psTm.executeQuery();
+
+            while (resultSet.next()){
+                Customer customer = new Customer(
+                        resultSet.getString("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("address"),
+                        resultSet.getDouble("salary")
+                );
+                customerObservableList.add(customer);
+                System.out.println(customer);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+//        -------------------------------------------------------
+
+
+        customerList.forEach(customer -> {
             customerObservableList.add(customer);
         });
-
-
 
         tblCustomers.setItems(customerObservableList);
     }
