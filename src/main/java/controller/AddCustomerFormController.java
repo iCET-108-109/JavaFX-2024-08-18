@@ -7,10 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Customer;
 
@@ -110,24 +107,45 @@ public class AddCustomerFormController implements Initializable {
         txtProvince.setText(newVal.getCity());
         txtPostalCode.setText(newVal.getPostalCode());
     }
-
     @FXML
     void btnAddOnAction(ActionEvent event) {
-        customerList.add(
-                new Customer(
-                        txtId.getText(),
-                        txtName.getText(),
-                        cmbTitle.getValue(),
-                        txtAddress.getText(),
-                        dateDob.getValue(),
-                        Double.parseDouble(txtSalary.getText()),
-                        txtCity.getText(),
-                        txtPostalCode.getText(),
-                        txtProvince.getText()
-        ));
+        Customer customer = new Customer(
+                txtId.getText(),
+                txtName.getText(),
+                cmbTitle.getValue(),
+                txtAddress.getText(),
+                dateDob.getValue(),
+                Double.parseDouble(txtSalary.getText()),
+                txtCity.getText(),
+                txtPostalCode.getText(),
+                txtProvince.getText()
+        );
+        try {
+            String SQL = "INSERT INTO Customer values(?,?,?,?,?,?,?,?,?)";
+            Connection connection = DBConnection.getInstance().getConnection();
+
+            PreparedStatement psTm = connection.prepareStatement(SQL);
+            psTm.setObject(1,customer.getId());
+            psTm.setObject(2,customer.getTitle());
+            psTm.setObject(3,customer.getName());
+            psTm.setObject(4,customer.getDob());
+            psTm.setObject(5,customer.getSalary());
+            psTm.setObject(6,customer.getAddress());
+            psTm.setObject(7,customer.getCity());
+            psTm.setObject(8,customer.getProvince());
+            psTm.setObject(9,customer.getPostalCode());
+
+            boolean isAdd = psTm.executeUpdate() > 0;
+            if (isAdd){
+                new Alert(Alert.AlertType.CONFIRMATION,"Customer Added!").show();
+                loadTable();
+            }
 
 
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
