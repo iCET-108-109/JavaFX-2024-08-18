@@ -17,6 +17,8 @@ import model.Customer;
 import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -42,7 +44,7 @@ public class AddCustomerFormController implements Initializable {
     private TableColumn colSalary;
 
     @FXML
-    private DatePicker dateDob;
+    private DatePicker  dateDob;
 
     @FXML
     private TableView<Customer> tblCustomers;
@@ -68,14 +70,14 @@ public class AddCustomerFormController implements Initializable {
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         colSalary.setCellValueFactory(new PropertyValueFactory<>("salary"));
-        //colDob.setCellValueFactory(new PropertyValueFactory<>("dob"));
+        colDob.setCellValueFactory(new PropertyValueFactory<>("dob"));
 
         loadTable();
 
         ObservableList<String> titleList = FXCollections.observableArrayList();
-        titleList.add("MR.");
-        titleList.add("MISS.");
-        titleList.add("MRS.");
+        titleList.add("Mr.");
+        titleList.add("Miss.");
+        titleList.add("Ms.");
         cmbTitle.setItems(titleList);
 
 //        ----------------------------------------------------------------
@@ -93,6 +95,7 @@ public class AddCustomerFormController implements Initializable {
         txtName.setText(newVal.getName());
         txtSalary.setText(""+newVal.getSalary());
         txtAddress.setText(newVal.getAddress());
+        dateDob.setValue(newVal.getDob());
     }
 
     @FXML
@@ -100,8 +103,10 @@ public class AddCustomerFormController implements Initializable {
         customerList.add(
                 new Customer(
                         txtId.getText(),
-                        cmbTitle.getValue() + txtName.getText(),
+                        txtName.getText(),
+                        cmbTitle.getValue(),
                         txtAddress.getText(),
+                        dateDob.getValue(),
                         Double.parseDouble(txtSalary.getText())
         ));
 
@@ -123,11 +128,14 @@ public class AddCustomerFormController implements Initializable {
             PreparedStatement psTm = connection.prepareStatement("SELECT * FROM customer");
             ResultSet resultSet = psTm.executeQuery();
 
+
             while (resultSet.next()){
                 Customer customer = new Customer(
                         resultSet.getString("CustId"),
                         resultSet.getString("CustName"),
+                        resultSet.getString("CustTitle"),
                         resultSet.getString("CustAddress"),
+                        resultSet.getDate("DOB").toLocalDate(),
                         resultSet.getDouble("salary")
                 );
                 customerObservableList.add(customer);
