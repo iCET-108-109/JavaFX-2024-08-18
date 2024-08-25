@@ -19,4 +19,7 @@ public class Customer {
     private String address;
     private LocalDate dob;
     private Double salary;
+    private String city;
+    private String postalCode;
+    private String province;
 }

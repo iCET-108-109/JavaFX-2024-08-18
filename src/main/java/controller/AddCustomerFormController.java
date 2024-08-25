@@ -25,6 +25,12 @@ import java.util.ResourceBundle;
 
 public class AddCustomerFormController implements Initializable {
 
+    public TableColumn colCity;
+    public TableColumn colProvince;
+    public TableColumn colPostalCode;
+    public JFXTextField txtCity;
+    public JFXTextField txtProvince;
+    public JFXTextField txtPostalCode;
     @FXML
     private ComboBox<String> cmbTitle;
 
@@ -71,6 +77,9 @@ public class AddCustomerFormController implements Initializable {
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         colSalary.setCellValueFactory(new PropertyValueFactory<>("salary"));
         colDob.setCellValueFactory(new PropertyValueFactory<>("dob"));
+        colProvince.setCellValueFactory(new PropertyValueFactory<>("province"));
+        colCity.setCellValueFactory(new PropertyValueFactory<>("city"));
+        colPostalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
 
         loadTable();
 
@@ -97,6 +106,9 @@ public class AddCustomerFormController implements Initializable {
         txtAddress.setText(newVal.getAddress());
         dateDob.setValue(newVal.getDob());
         cmbTitle.setValue(newVal.getTitle());
+        txtCity.setText(newVal.getCity());
+        txtProvince.setText(newVal.getCity());
+        txtPostalCode.setText(newVal.getPostalCode());
     }
 
     @FXML
@@ -108,7 +120,10 @@ public class AddCustomerFormController implements Initializable {
                         cmbTitle.getValue(),
                         txtAddress.getText(),
                         dateDob.getValue(),
-                        Double.parseDouble(txtSalary.getText())
+                        Double.parseDouble(txtSalary.getText()),
+                        txtCity.getText(),
+                        txtPostalCode.getText(),
+                        txtProvince.getText()
         ));
 
 
@@ -137,7 +152,10 @@ public class AddCustomerFormController implements Initializable {
                         resultSet.getString("CustTitle"),
                         resultSet.getString("CustAddress"),
                         resultSet.getDate("DOB").toLocalDate(),
-                        resultSet.getDouble("salary")
+                        resultSet.getDouble("salary"),
+                        resultSet.getString("city"),
+                        resultSet.getString("postalCode"),
+                        resultSet.getString("province")
                 );
                 customerObservableList.add(customer);
             }
