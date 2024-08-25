@@ -96,6 +96,7 @@ public class AddCustomerFormController implements Initializable {
         txtSalary.setText(""+newVal.getSalary());
         txtAddress.setText(newVal.getAddress());
         dateDob.setValue(newVal.getDob());
+        cmbTitle.setValue(newVal.getTitle());
     }
 
     @FXML
