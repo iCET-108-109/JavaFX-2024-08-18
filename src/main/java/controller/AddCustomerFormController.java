@@ -70,11 +70,29 @@ public class AddCustomerFormController implements Initializable {
         colSalary.setCellValueFactory(new PropertyValueFactory<>("salary"));
         //colDob.setCellValueFactory(new PropertyValueFactory<>("dob"));
 
+        loadTable();
+
         ObservableList<String> titleList = FXCollections.observableArrayList();
         titleList.add("MR.");
         titleList.add("MISS.");
         titleList.add("MRS.");
         cmbTitle.setItems(titleList);
+
+//        ----------------------------------------------------------------
+
+        tblCustomers.getSelectionModel().selectedItemProperty().addListener((observableValue, oldVal, newVal) -> {
+            System.out.println("1 : "+observableValue);
+            System.out.println("OLD VAL : "+oldVal);
+            System.out.println("NEW VAL : "+newVal);
+            addValueToText(newVal);
+        });
+    }
+
+    private void addValueToText(Customer newVal) {
+        txtId.setText(newVal.getId());
+        txtName.setText(newVal.getName());
+        txtSalary.setText(""+newVal.getSalary());
+        txtAddress.setText(newVal.getAddress());
     }
 
     @FXML
@@ -93,7 +111,10 @@ public class AddCustomerFormController implements Initializable {
 
     @FXML
     void btnReloadOnAction(ActionEvent event) {
+        loadTable();
+    }
 
+    private void loadTable(){
         ObservableList<Customer> customerObservableList = FXCollections.observableArrayList();
 
         try {
@@ -104,13 +125,12 @@ public class AddCustomerFormController implements Initializable {
 
             while (resultSet.next()){
                 Customer customer = new Customer(
-                        resultSet.getString("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("address"),
+                        resultSet.getString("CustId"),
+                        resultSet.getString("CustName"),
+                        resultSet.getString("CustAddress"),
                         resultSet.getDouble("salary")
                 );
                 customerObservableList.add(customer);
-                System.out.println(customer);
             }
 
         } catch (SQLException e) {
@@ -126,6 +146,7 @@ public class AddCustomerFormController implements Initializable {
         });
 
         tblCustomers.setItems(customerObservableList);
+
     }
 
 
