@@ -92,7 +92,9 @@ public class AddCustomerFormController implements Initializable {
             System.out.println("1 : "+observableValue);
             System.out.println("OLD VAL : "+oldVal);
             System.out.println("NEW VAL : "+newVal);
-            addValueToText(newVal);
+            if (newVal!=null){
+                addValueToText(newVal);
+            }
         });
     }
 
@@ -137,7 +139,7 @@ public class AddCustomerFormController implements Initializable {
 
             boolean isAdd = psTm.executeUpdate() > 0;
             if (isAdd){
-                new Alert(Alert.AlertType.CONFIRMATION,"Customer Added!").show();
+                new Alert(Alert.AlertType.INFORMATION,"Customer Added!").show();
                 loadTable();
             }
 
@@ -146,11 +148,6 @@ public class AddCustomerFormController implements Initializable {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @FXML
-    void btnReloadOnAction(ActionEvent event) {
-        loadTable();
     }
 
     private void loadTable(){
@@ -194,5 +191,53 @@ public class AddCustomerFormController implements Initializable {
 
     }
 
+    public void btnDeleteOnAction(ActionEvent actionEvent) {
+        try {
+            boolean isDeleted = DBConnection.getInstance().getConnection().createStatement().executeUpdate("DELETE FROM Customer WHERE CustID='" + txtId.getText() + "'") > 0;
+            if (isDeleted){
+                new Alert(Alert.AlertType.INFORMATION,"Customer Deleted !").show();
+                loadTable();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    public void btnUpdateOnAction(ActionEvent actionEvent) {
+
+        Customer customer = new Customer(
+                txtId.getText(),
+                txtName.getText(),
+                cmbTitle.getValue(),
+                txtAddress.getText(),
+                dateDob.getValue(),
+                Double.parseDouble(txtSalary.getText()),
+                txtCity.getText(),
+                txtPostalCode.getText(),
+                txtProvince.getText()
+        );
+
+        String SQL = "UPDATE Customer SET CustTitle=?, CustName=?, DOB=?, salary=?, CustAddress=?, City=?, Province=?, PostalCode=? WHERE CustID=?";
+        try {
+            Connection connection = DBConnection.getInstance().getConnection();
+            PreparedStatement psTm = connection.prepareStatement(SQL);
+            psTm.setObject(1,customer.getTitle());
+            psTm.setObject(2,customer.getName());
+            psTm.setObject(3,customer.getDob());
+            psTm.setObject(4,customer.getSalary());
+            psTm.setObject(5,customer.getAddress());
+            psTm.setObject(6,customer.getCity());
+            psTm.setObject(7,customer.getProvince());
+            psTm.setObject(8,customer.getPostalCode());
+            psTm.setObject(9,customer.getId());
+            boolean isUpdate = psTm.executeUpdate() > 0;
+
+            if (isUpdate){
+                new Alert(Alert.AlertType.INFORMATION,"Customer Updated!").show();
+                loadTable();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -27,7 +27,7 @@
             <Font name="System Bold" size="25.0" />
          </font>
       </Label>
-      <TableView fx:id="tblCustomers" layoutX="21.0" layoutY="264.0" prefHeight="189.0" prefWidth="708.0">
+      <TableView fx:id="tblCustomers" layoutX="21.0" layoutY="264.0" prefHeight="213.0" prefWidth="708.0">
         <columns>
           <TableColumn fx:id="colId" prefWidth="75.0" text="ID" />
           <TableColumn fx:id="colName" prefWidth="93.33334350585938" text="Name" />
@@ -39,11 +39,6 @@
             <TableColumn fx:id="colPostalCode" prefWidth="96.66668701171875" text="Postal Code" />
         </columns>
       </TableView>
-      <JFXButton layoutX="663.0" layoutY="465.0" onAction="#btnReloadOnAction" style="-fx-background-color: #fbc531;" text="Reload" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </JFXButton>
       <JFXTextField fx:id="txtCity" layoutX="375.0" layoutY="93.0" promptText="City" />
       <JFXTextField fx:id="txtProvince" layoutX="375.0" layoutY="137.0" promptText="Province" />
       <JFXButton layoutX="678.0" layoutY="218.0" onAction="#btnAddOnAction" style="-fx-background-color: #4cd137;" text="Add" textFill="WHITE">
@@ -51,12 +46,12 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </JFXButton>
-      <JFXButton layoutX="605.0" layoutY="218.0" style="-fx-background-color: #487eb0;" text="Update" textFill="WHITE">
+      <JFXButton layoutX="605.0" layoutY="218.0" onAction="#btnUpdateOnAction" style="-fx-background-color: #487eb0;" text="Update" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </JFXButton>
-      <JFXButton layoutX="541.0" layoutY="218.0" style="-fx-background-color: #e84118;" text="Delete" textFill="WHITE">
+      <JFXButton layoutX="541.0" layoutY="218.0" onAction="#btnDeleteOnAction" style="-fx-background-color: #e84118;" text="Delete" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
