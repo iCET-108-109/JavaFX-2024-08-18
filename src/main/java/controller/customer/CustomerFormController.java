@@ -1,4 +1,4 @@
-package controller;
+package controller.customer;
 
 import com.jfoenix.controls.JFXTextField;
 import db.DBConnection;
@@ -13,14 +13,11 @@ import model.Customer;
 
 import java.net.URL;
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class AddCustomerFormController implements Initializable {
+public class CustomerFormController implements Initializable {
 
     public TableColumn colCity;
     public TableColumn colProvince;
@@ -66,6 +63,8 @@ public class AddCustomerFormController implements Initializable {
 
     List<Customer> customerList = new ArrayList<>();
 
+    CustomerService service = new CustomerController();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -87,11 +86,12 @@ public class AddCustomerFormController implements Initializable {
         cmbTitle.setItems(titleList);
 
 //        ----------------------------------------------------------------
-
+        System.out.println("TEST 01");
         tblCustomers.getSelectionModel().selectedItemProperty().addListener((observableValue, oldVal, newVal) -> {
             System.out.println("1 : "+observableValue);
             System.out.println("OLD VAL : "+oldVal);
             System.out.println("NEW VAL : "+newVal);
+            System.out.println("TEST 02");
             if (newVal!=null){
                 addValueToText(newVal);
             }
@@ -122,32 +122,12 @@ public class AddCustomerFormController implements Initializable {
                 txtPostalCode.getText(),
                 txtProvince.getText()
         );
-        try {
-            String SQL = "INSERT INTO Customer values(?,?,?,?,?,?,?,?,?)";
-            Connection connection = DBConnection.getInstance().getConnection();
-
-            PreparedStatement psTm = connection.prepareStatement(SQL);
-            psTm.setObject(1,customer.getId());
-            psTm.setObject(2,customer.getTitle());
-            psTm.setObject(3,customer.getName());
-            psTm.setObject(4,customer.getDob());
-            psTm.setObject(5,customer.getSalary());
-            psTm.setObject(6,customer.getAddress());
-            psTm.setObject(7,customer.getCity());
-            psTm.setObject(8,customer.getProvince());
-            psTm.setObject(9,customer.getPostalCode());
-
-            boolean isAdd = psTm.executeUpdate() > 0;
-            if (isAdd){
-                new Alert(Alert.AlertType.INFORMATION,"Customer Added!").show();
-                loadTable();
-            }
-
-
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if (service.addCustomer(customer)){
+            new Alert(Alert.AlertType.INFORMATION).show();
+        }else {
+            new Alert(Alert.AlertType.ERROR).show();
         }
+
     }
 
     private void loadTable(){
@@ -192,15 +172,7 @@ public class AddCustomerFormController implements Initializable {
     }
 
     public void btnDeleteOnAction(ActionEvent actionEvent) {
-        try {
-            boolean isDeleted = DBConnection.getInstance().getConnection().createStatement().executeUpdate("DELETE FROM Customer WHERE CustID='" + txtId.getText() + "'") > 0;
-            if (isDeleted){
-                new Alert(Alert.AlertType.INFORMATION,"Customer Deleted !").show();
-                loadTable();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+
     }
 
     public void btnUpdateOnAction(ActionEvent actionEvent) {
@@ -217,27 +189,6 @@ public class AddCustomerFormController implements Initializable {
                 txtProvince.getText()
         );
 
-        String SQL = "UPDATE Customer SET CustTitle=?, CustName=?, DOB=?, salary=?, CustAddress=?, City=?, Province=?, PostalCode=? WHERE CustID=?";
-        try {
-            Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement psTm = connection.prepareStatement(SQL);
-            psTm.setObject(1,customer.getTitle());
-            psTm.setObject(2,customer.getName());
-            psTm.setObject(3,customer.getDob());
-            psTm.setObject(4,customer.getSalary());
-            psTm.setObject(5,customer.getAddress());
-            psTm.setObject(6,customer.getCity());
-            psTm.setObject(7,customer.getProvince());
-            psTm.setObject(8,customer.getPostalCode());
-            psTm.setObject(9,customer.getId());
-            boolean isUpdate = psTm.executeUpdate() > 0;
 
-            if (isUpdate){
-                new Alert(Alert.AlertType.INFORMATION,"Customer Updated!").show();
-                loadTable();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
