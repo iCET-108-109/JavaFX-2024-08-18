@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class CustomerController implements CustomerService{
     @Override
     public boolean addCustomer(Customer customer) {
-        boolean isAdd;
+
         try {
             String SQL = "INSERT INTO Customer values(?,?,?,?,?,?,?,?,?)";
             Connection connection = DBConnection.getInstance().getConnection();
@@ -28,17 +28,11 @@ public class CustomerController implements CustomerService{
             psTm.setObject(8,customer.getProvince());
             psTm.setObject(9,customer.getPostalCode());
 
-            isAdd = psTm.executeUpdate() > 0;
-
+            return psTm.executeUpdate() > 0;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        if (isAdd){
-            return true;
-        }
-
-        return false;
     }
 
     @Override
@@ -48,7 +42,7 @@ public class CustomerController implements CustomerService{
 
     @Override
     public boolean updateCustomer(Customer customer) {
-        boolean isUpdate;
+
         String SQL = "UPDATE Customer SET CustTitle=?, CustName=?, DOB=?, salary=?, CustAddress=?, City=?, Province=?, PostalCode=? WHERE CustID=?";
         try {
             Connection connection = DBConnection.getInstance().getConnection();
@@ -62,34 +56,21 @@ public class CustomerController implements CustomerService{
             psTm.setObject(7,customer.getProvince());
             psTm.setObject(8,customer.getPostalCode());
             psTm.setObject(9,customer.getId());
-            isUpdate = psTm.executeUpdate() > 0;
+            return psTm.executeUpdate() > 0;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        if (isUpdate){
-            return true;
-        }
-        return false;
     }
-
     @Override
     public boolean deleteCustomer(String id) {
-        boolean isDeleted;
         try {
-             isDeleted = DBConnection.getInstance().getConnection().createStatement().executeUpdate("DELETE FROM Customer WHERE CustID='" + id + "'") > 0;
-            if (isDeleted){
-                new Alert(Alert.AlertType.INFORMATION,"Customer Deleted !").show();
-            }
+             return DBConnection.getInstance().getConnection().createStatement().executeUpdate("DELETE FROM Customer WHERE CustID='" + id + "'") > 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        if (isDeleted){
-            return true;
-        }
-        return false;
-    }
 
+    }
     @Override
     public Customer searchCustomer(String id) {
         return null;
