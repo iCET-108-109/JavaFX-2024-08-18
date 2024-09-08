@@ -12,6 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ItemController implements ItemService {
+    private static ItemController instance;
+    private ItemController(){}
+
+    public static ItemController getInstance(){
+        return instance==null?instance=new ItemController():instance;
+    }
     @Override
     public boolean addItem(Item item) {
         String SQl = "INSERT INTO Item values(?,?,?,?,?)";

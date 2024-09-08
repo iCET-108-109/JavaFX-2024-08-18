@@ -1,6 +1,7 @@
 package controller.order;
 
 import controller.customer.CustomerController;
+import controller.item.ItemController;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -17,6 +18,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.util.Duration;
 import model.Customer;
+import model.Item;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -35,7 +37,7 @@ public class PlaceOrderFromController implements Initializable {
     private ComboBox<String> cmbCustomerId;
 
     @FXML
-    private ComboBox<?> cmbItemCode;
+    private ComboBox<String> cmbItemCode;
 
     @FXML
     private TableColumn<?, ?> colDescription;
@@ -86,12 +88,31 @@ public class PlaceOrderFromController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadDateAndTime();
         loadCustomerIds();
+        loadItemCodes();
         cmbCustomerId.getSelectionModel().selectedItemProperty().addListener((observableValue, s, t1) -> {
             System.out.println(t1);
             if(t1!=null){
                 searchCustomer(t1);
             }
         });
+        cmbItemCode.getSelectionModel().selectedItemProperty().addListener((observableValue, s, t1) -> {
+            System.out.println(t1);
+            if(t1!=null){
+                searchItem(t1);
+            }
+        });
+    }
+
+    private void loadItemCodes() {
+        ObservableList<String> idsList = FXCollections.observableArrayList();
+        ObservableList<Item> allItems = ItemController.getInstance().getAllItems();
+
+        allItems.forEach(obj->{
+            idsList.add(obj.getItemCode());
+        });
+
+        cmbItemCode.setItems(idsList);
+
     }
 
     @FXML
@@ -104,6 +125,13 @@ public class PlaceOrderFromController implements Initializable {
         System.out.println(customer);
         txtCustomerName.setText(customer.getName());
         txtCustomerAddress.setText(customer.getAddress());
+
+    }
+
+    private void searchItem(String id){
+        Item item = ItemController.getInstance().searchItem(id);
+        txtItemDescription.setText(item.getDescription());
+        txtItemStock.setText(item.getQty().toString());
 
     }
 

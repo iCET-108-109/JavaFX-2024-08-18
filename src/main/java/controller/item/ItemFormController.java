@@ -48,7 +48,7 @@ public class ItemFormController implements Initializable {
 
     @FXML
     private JFXTextField txtUnitPrice;
-    ItemService service = new ItemController();
+    ItemService service = ItemController.getInstance();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         colItemCode.setCellValueFactory(new PropertyValueFactory<>("itemCode"));
