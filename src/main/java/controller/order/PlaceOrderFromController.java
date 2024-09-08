@@ -10,13 +10,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
+import model.CartTm;
 import model.Customer;
 import model.Item;
 
@@ -30,6 +27,7 @@ import java.util.ResourceBundle;
 public class PlaceOrderFromController implements Initializable {
 
     public TextField txtCustomerAddress;
+    public TextField txtUnitPrice;
     @FXML
     private Button btnPlaceOrderOnAction;
 
@@ -67,7 +65,7 @@ public class PlaceOrderFromController implements Initializable {
     private Label lblOrderTime;
 
     @FXML
-    private TableView<?> tblCart;
+    private TableView<CartTm> tblCart;
 
     @FXML
     private TextField txtCustomerId;
@@ -91,13 +89,13 @@ public class PlaceOrderFromController implements Initializable {
         loadItemCodes();
         cmbCustomerId.getSelectionModel().selectedItemProperty().addListener((observableValue, s, t1) -> {
             System.out.println(t1);
-            if(t1!=null){
+            if (t1 != null) {
                 searchCustomer(t1);
             }
         });
         cmbItemCode.getSelectionModel().selectedItemProperty().addListener((observableValue, s, t1) -> {
             System.out.println(t1);
-            if(t1!=null){
+            if (t1 != null) {
                 searchItem(t1);
             }
         });
@@ -107,7 +105,7 @@ public class PlaceOrderFromController implements Initializable {
         ObservableList<String> idsList = FXCollections.observableArrayList();
         ObservableList<Item> allItems = ItemController.getInstance().getAllItems();
 
-        allItems.forEach(obj->{
+        allItems.forEach(obj -> {
             idsList.add(obj.getItemCode());
         });
 
@@ -115,12 +113,37 @@ public class PlaceOrderFromController implements Initializable {
 
     }
 
+    ObservableList<CartTm> cartTms = FXCollections.observableArrayList();
+
     @FXML
     void btnAddToCartOnAction(ActionEvent event) {
 
+        colItemCode.setCellValueFactory(new PropertyValueFactory<>("itemCode"));
+        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        colQty.setCellValueFactory(new PropertyValueFactory<>("qty"));
+        colUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+
+
+        String itemCode = cmbItemCode.getValue();
+        String itemDesc = txtItemDescription.getText();
+        Integer qty = Integer.valueOf(txtQty.getText());
+        Double unitPrice = Double.valueOf(txtUnitPrice.getText());
+        Double total = unitPrice * qty;
+
+        Integer itemStock = Integer.parseInt(txtItemStock.getText());
+
+        if (itemStock < qty) {
+            new Alert(Alert.AlertType.WARNING, "Invalid Qty").show();
+        } else {
+            cartTms.add(new CartTm(itemCode, itemDesc, qty, unitPrice, total));
+            tblCart.setItems(cartTms);
+        }
+
+
     }
 
-    private void searchCustomer(String id){
+    private void searchCustomer(String id) {
         Customer customer = CustomerController.getInstance().searchCustomer(id);
         System.out.println(customer);
         txtCustomerName.setText(customer.getName());
@@ -128,10 +151,11 @@ public class PlaceOrderFromController implements Initializable {
 
     }
 
-    private void searchItem(String id){
+    private void searchItem(String id) {
         Item item = ItemController.getInstance().searchItem(id);
         txtItemDescription.setText(item.getDescription());
         txtItemStock.setText(item.getQty().toString());
+        txtUnitPrice.setText(item.getUnitPrice().toString());
 
     }
 
@@ -152,10 +176,10 @@ public class PlaceOrderFromController implements Initializable {
         timeline.play();
     }
 
-    private void loadCustomerIds(){
+    private void loadCustomerIds() {
         List<String> allCustomerIds = CustomerController.getInstance().getAllCustomerIds();
         ObservableList<String> objects = FXCollections.observableArrayList();
-        allCustomerIds.forEach(id->{
+        allCustomerIds.forEach(id -> {
             objects.add(id);
         });
 
