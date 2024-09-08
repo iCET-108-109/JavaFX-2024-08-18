@@ -61,7 +61,7 @@ public class CustomerFormController implements Initializable {
     @FXML
     private JFXTextField txtSalary;
 
-    CustomerService service = new CustomerController();
+    CustomerService service = CustomerController.getInstance();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -110,9 +110,9 @@ public class CustomerFormController implements Initializable {
                 txtId.getText(),
                 txtName.getText(),
                 cmbTitle.getValue(),
-                txtAddress.getText(),
                 dateDob.getValue(),
                 Double.parseDouble(txtSalary.getText()),
+                txtAddress.getText(),
                 txtCity.getText(),
                 txtPostalCode.getText(),
                 txtProvince.getText()
@@ -126,36 +126,7 @@ public class CustomerFormController implements Initializable {
     }
 
     private void loadTable() {
-        ObservableList<Customer> customerObservableList = FXCollections.observableArrayList();
-        try {
-            Connection connection = DBConnection.getInstance().getConnection();
-
-            PreparedStatement psTm = connection.prepareStatement("SELECT * FROM customer");
-            ResultSet resultSet = psTm.executeQuery();
-
-            while (resultSet.next()) {
-                Customer customer = new Customer(
-                        resultSet.getString("CustId"),
-                        resultSet.getString("CustName"),
-                        resultSet.getString("CustTitle"),
-                        resultSet.getString("CustAddress"),
-                        resultSet.getDate("DOB").toLocalDate(),
-                        resultSet.getDouble("salary"),
-                        resultSet.getString("city"),
-                        resultSet.getString("postalCode"),
-                        resultSet.getString("province")
-                );
-                customerObservableList.add(customer);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-//        -------------------------------------------------------
-
-        tblCustomers.setItems(customerObservableList);
-
+        tblCustomers.setItems(service.getAllCustomers());
     }
 
     public void btnDeleteOnAction(ActionEvent actionEvent) {
@@ -168,9 +139,9 @@ public class CustomerFormController implements Initializable {
                 txtId.getText(),
                 txtName.getText(),
                 cmbTitle.getValue(),
-                txtAddress.getText(),
                 dateDob.getValue(),
                 Double.parseDouble(txtSalary.getText()),
+                txtAddress.getText(),
                 txtCity.getText(),
                 txtPostalCode.getText(),
                 txtProvince.getText()

@@ -23,7 +23,7 @@
       <ComboBox fx:id="cmbCustomerId" layoutX="58.0" layoutY="115.0" prefWidth="150.0" promptText="Customer ID" />
       <ComboBox fx:id="cmbItemCode" layoutX="56.0" layoutY="154.0" prefWidth="150.0" promptText="Item Code" />
       <TextField fx:id="txtCustomerName" layoutX="229.0" layoutY="115.0" promptText="Customer Name" />
-      <TextField fx:id="txtCustomerId" layoutX="388.0" layoutY="115.0" promptText="Customer Address" />
+      <TextField fx:id="txtCustomerAddress" layoutX="388.0" layoutY="115.0" promptText="Customer Address" />
       <TextField fx:id="txtItemDescription" layoutX="229.0" layoutY="154.0" promptText="Description" />
       <TextField fx:id="txtItemStock" layoutX="388.0" layoutY="154.0" prefHeight="25.0" prefWidth="69.0" promptText="Stock" />
       <Button layoutX="463.0" layoutY="201.0" mnemonicParsing="false" onAction="#btnAddToCartOnAction" text="Add To Cart" />
