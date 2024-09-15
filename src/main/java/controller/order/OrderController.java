@@ -1,6 +1,8 @@
 package controller.order;
 
+import controller.item.ItemController;
 import db.DBConnection;
+import javafx.scene.control.Alert;
 import model.Order;
 
 import java.sql.Connection;
@@ -18,6 +20,15 @@ public class OrderController {
         boolean isOrderAdd = psTm.executeUpdate()>0;
         if (isOrderAdd){
             boolean isOrderDetailAdd = new OrderDetailController().addOrderDetail(order.getOrderDetails());
+            if (isOrderDetailAdd){
+                boolean isUpdateStock = ItemController.getInstance().updateStock(order.getOrderDetails());
+                if (isUpdateStock){
+                    new Alert(Alert.AlertType.INFORMATION,"Order Placed!!").show();
+                    return true;
+                }
+            }
         }
+        new Alert(Alert.AlertType.ERROR,"Order NOT Placed :(").show();
+        return false;
     }
 }
