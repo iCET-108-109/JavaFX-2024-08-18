@@ -32,7 +32,7 @@ public class CustomerController implements CustomerService {
 
             PreparedStatement psTm = connection.prepareStatement(SQL);
             psTm.setObject(1, customer.getId());
-            psTm.setObject(2, customer.getTitle());
+            psTm.setObject(2, "m");
             psTm.setObject(3, customer.getName());
             psTm.setObject(4, customer.getDob());
             psTm.setObject(5, customer.getSalary());
