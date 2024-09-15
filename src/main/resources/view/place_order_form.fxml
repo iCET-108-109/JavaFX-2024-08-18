@@ -11,7 +11,6 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="459.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.order.PlaceOrderFromController">
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#0c4275" height="51.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="600.0" />
@@ -36,7 +35,7 @@
             <TableColumn fx:id="colTotal" prefWidth="110.0" text="Total" />
         </columns>
       </TableView>
-      <Button fx:id="btnPlaceOrderOnAction" layoutX="479.0" layoutY="409.0" mnemonicParsing="false" text="Place Order" />
+      <Button layoutX="479.0" layoutY="409.0" mnemonicParsing="false" onAction="#btnPlaceOrderOnAction" text="Place Order" />
       <Label layoutX="31.0" layoutY="413.0" text="NET Total :">
          <font>
             <Font name="System Bold Italic" size="15.0" />
@@ -67,12 +66,7 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label layoutX="57.0" layoutY="75.0" text="Order ID : ">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblOrderId" layoutX="119.0" layoutY="75.0" text="O001">
+      <Label layoutX="54.0" layoutY="74.0" text="Order ID : ">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
@@ -85,5 +79,6 @@
             <Font name="System Bold Italic" size="15.0" />
          </font>
       </Label>
+      <TextField fx:id="txtOrderId" layoutX="129.0" layoutY="71.0" prefHeight="26.0" prefWidth="60.0" />
    </children>
 </AnchorPane>

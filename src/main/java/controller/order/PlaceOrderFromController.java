@@ -13,13 +13,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
-import model.CartTm;
-import model.Customer;
-import model.Item;
+import model.*;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -28,8 +28,8 @@ public class PlaceOrderFromController implements Initializable {
 
     public TextField txtCustomerAddress;
     public TextField txtUnitPrice;
-    @FXML
-    private Button btnPlaceOrderOnAction;
+    public TextField txtOrderId;
+
 
     @FXML
     private ComboBox<String> cmbCustomerId;
@@ -138,6 +138,7 @@ public class PlaceOrderFromController implements Initializable {
         } else {
             cartTms.add(new CartTm(itemCode, itemDesc, qty, unitPrice, total));
             tblCart.setItems(cartTms);
+            calcTotal();
         }
 
 
@@ -187,4 +188,30 @@ public class PlaceOrderFromController implements Initializable {
     }
 
 
+    private void calcTotal(){
+        Double netTotal=0.0;
+        for (CartTm cartTm : cartTms){
+           netTotal += cartTm.getTotal();
+        }
+        lblNetTotal.setText(netTotal.toString());
+    }
+
+
+    public void btnPlaceOrderOnAction(ActionEvent actionEvent) {
+        String orderId = txtOrderId.getText();
+        LocalDate date = LocalDate.parse(lblOrderDate.getText());
+        String customerId = cmbCustomerId.getValue();
+        ArrayList<OrderDetail> orderDetails = new ArrayList<>();
+        cartTms.forEach(obj->{
+            orderDetails.add(
+                    new OrderDetail(
+                            txtOrderId.getText(),
+                            obj.getItemCode(),
+                            obj.getQty(),
+                            0.0)
+            );
+        });
+        Order order = new Order(orderId, date, customerId, orderDetails);
+        System.out.println(order);
+    }
 }
