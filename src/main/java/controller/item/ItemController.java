@@ -3,8 +3,8 @@ package controller.item;
 import db.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.Item;
-import model.OrderDetail;
+import dto.Item;
+import dto.OrderDetail;
 import util.CrudUtil;
 
 import java.sql.Connection;

@@ -1,7 +1,6 @@
 package controller.item;
 
 import com.jfoenix.controls.JFXTextField;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,7 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import model.Item;
+import dto.Item;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -74,6 +73,7 @@ public class ItemFormController implements Initializable {
     }
     @FXML
     void btnAddOnAction(ActionEvent event) {
+
         if (
                 service.addItem(
                         new Item(

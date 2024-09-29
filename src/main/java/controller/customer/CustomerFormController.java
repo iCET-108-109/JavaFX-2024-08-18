@@ -1,7 +1,6 @@
 package controller.customer;
 
 import com.jfoenix.controls.JFXTextField;
-import db.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -9,12 +8,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import model.Customer;
+import dto.Customer;
+import service.ServiceFactory;
+import util.ServiceType;
 
 import java.net.URL;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class CustomerFormController implements Initializable {
@@ -106,6 +104,7 @@ public class CustomerFormController implements Initializable {
 
     @FXML
     void btnAddOnAction(ActionEvent event) {
+        service.custom.CustomerService customerService = ServiceFactory.getInstance().getServiceType(ServiceType.CUSTOMER);
         Customer customer = new Customer(
                 txtId.getText(),
                 txtName.getText(),
@@ -117,7 +116,7 @@ public class CustomerFormController implements Initializable {
                 txtPostalCode.getText(),
                 txtProvince.getText()
         );
-        if (service.addCustomer(customer)) {
+        if (customerService.addCustomer(customer)) {
             new Alert(Alert.AlertType.INFORMATION).show();
         } else {
             new Alert(Alert.AlertType.ERROR).show();
